@@ -1,0 +1,30 @@
+# Aquí sí usamos compose y sus nombres de servicio se resuelven 
+# solos por DNS interno — ya no necesitas docker inspect para sacar IPs
+
+services:
+  bbdd:
+    build: ./BBDD
+    container_name: bbdd_postgres
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+      POSTGRES_DB: ejercicio_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  ingesta:
+    build: ./Ingesta
+    container_name: ingesta_python
+    depends_on:
+      - bbdd
+    environment:
+      DB_HOST: bbdd
+      DB_PORT: 5432
+      DB_NAME: ejercicio_db
+      DB_USER: admin
+      DB_PASSWORD: admin123
+
+volumes:
+  pgdata:
