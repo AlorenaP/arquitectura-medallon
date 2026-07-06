@@ -1,0 +1,12 @@
+version: 2
+
+models:
+  - name: stg_personas
+    columns:
+      - name: id
+        tests:
+          - unique
+          - not_null
+      - name: email
+        tests:
+          - not_null

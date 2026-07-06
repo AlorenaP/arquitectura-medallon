@@ -23,6 +23,24 @@ services:
     networks:
       - medallon_net
 
+  dbt:
+    build: ./DBT
+    image: dbt:latest
+    profiles: ["build-only"]
+    networks:
+      - medallon_net
+
+  dbt-docs:
+    build: ./DBT
+    container_name: dbt_docs
+    depends_on:
+      - bbdd
+    networks:
+      - medallon_net
+    ports:
+      - "8082:8080"
+    command: sh -c "dbt docs generate && dbt docs serve --port 8080 --host 0.0.0.0"
+
   airflow:
     build: ./Airflow
     container_name: airflow_orquestador

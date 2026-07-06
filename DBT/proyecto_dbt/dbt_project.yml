@@ -1,0 +1,17 @@
+name: 'medallon'
+version: '1.0.0'
+config-version: 2
+
+profile: 'medallon'
+
+model-paths: ["models"]
+macro-paths: ["macros"]
+
+models:
+  medallon:
+    staging:
+      +materialized: view
+      +schema: staging
+    marts:
+      +materialized: table
+      +schema: marts
