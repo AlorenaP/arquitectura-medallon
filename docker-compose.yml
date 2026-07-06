@@ -13,18 +13,39 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+    networks:
+      - medallon_net
 
   ingesta:
     build: ./Ingesta
-    container_name: ingesta_python
+    image: ingesta:latest
+    profiles: ["build-only"]
+    networks:
+      - medallon_net
+
+  airflow:
+    build: ./Airflow
+    container_name: airflow_orquestador
     depends_on:
       - bbdd
+    user: "0:0"
     environment:
-      DB_HOST: bbdd
-      DB_PORT: 5432
-      DB_NAME: ejercicio_db
-      DB_USER: admin
-      DB_PASSWORD: admin123
+      AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "False"
+      AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+    ports:
+      - "8081:8080"
+    volumes:
+      - ./Airflow/dags:/opt/airflow/dags
+      - airflow_data:/opt/airflow
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - medallon_net
+    command: standalone
+
+networks:
+  medallon_net:
+    name: medallon_net
 
 volumes:
   pgdata:
+  airflow_data:
