@@ -58,6 +58,7 @@ graph TD
 
 ## Estructura del repositorio
 
+
 medallon/
 ├── docker-compose.yml
 ├── README.md
@@ -85,11 +86,12 @@ medallon/
 │           └── marts/
 │               └── mart_personas.sql
 └── Airflow/
-├── Dockerfile
-├── requirements.txt
-└── dags/
-├── dag_ingesta.py         # DAG: carga_inicial (@once)
-└── pipeline_medallon.py   # DAG: carga_continua -> staging -> test -> marts (cada 1 min)
+    ├── Dockerfile
+    ├── requirements.txt
+    └── dags/
+        ├── dag_ingesta.py
+        └── pipeline_medallon.py
+
 
 ## Puesta en marcha
 
