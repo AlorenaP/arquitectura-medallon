@@ -58,7 +58,7 @@ graph TD
 
 ## Estructura del repositorio
 
-
+```
 medallon/
 ├── docker-compose.yml
 ├── README.md
@@ -91,7 +91,7 @@ medallon/
     └── dags/
         ├── dag_ingesta.py
         └── pipeline_medallon.py
-
+```
 
 ## Puesta en marcha
 
