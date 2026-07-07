@@ -9,29 +9,29 @@ arquitectura medallón (Raw → Staging → Marts).
 ```mermaid
 graph TD
     subgraph Airflow["Contenedor Airflow (orquestador)"]
-        DAG1["DAG: carga_inicial<br/>(una sola vez)"]
-        DAG2["DAG: pipeline_medallon<br/>(cada 1 minuto)"]
+        DAG1["DAG: carga_inicial (una sola vez)"]
+        DAG2["DAG: pipeline_medallon (cada 1 minuto)"]
     end
 
-    subgraph Tareas["Tareas de pipeline_medallon (DockerOperator, en orden)"]
+    subgraph Tareas["Tareas de pipeline_medallon en orden"]
         T1["1. carga_continua"] --> T2["2. staging"] --> T3["3. test"] --> T4["4. marts"]
     end
 
-    ING["Contenedor Ingesta<br/>(efímero, imagen: ingesta:latest)<br/>Python + randomuser.me API"]
-    DBT["Contenedor dbt<br/>(efímero, imagen: dbt:latest)"]
-    PG[("PostgreSQL<br/>schemas: raw / staging / marts")]
-    DOCS["Contenedor dbt-docs<br/>(persistente, puerto 8082)"]
-    ADM["Contenedor Adminer<br/>(persistente, puerto 8080)"]
+    ING["Contenedor Ingesta (efimero, imagen ingesta:latest) Python + randomuser.me API"]
+    DBT["Contenedor dbt (efimero, imagen dbt:latest)"]
+    PG[("PostgreSQL: raw / staging / marts")]
+    DOCS["Contenedor dbt-docs (persistente, puerto 8082)"]
+    ADM["Contenedor Adminer (persistente, puerto 8080)"]
 
-    DAG1 -.lanza vía docker.sock.-> ING
-    T1 -.lanza vía docker.sock.-> ING
-    T2 -.lanza vía docker.sock.-> DBT
-    T3 -.lanza vía docker.sock.-> DBT
-    T4 -.lanza vía docker.sock.-> DBT
+    DAG1 -->|lanza via docker socket| ING
+    T1 -->|lanza via docker socket| ING
+    T2 -->|lanza via docker socket| DBT
+    T3 -->|lanza via docker socket| DBT
+    T4 -->|lanza via docker socket| DBT
 
     ING -->|INSERT| PG
-    DBT -->|raw -> staging (vistas, limpieza)| PG
-    DBT -->|staging -> marts (tablas, agregación)| PG
+    DBT -->|raw a staging: vistas, limpieza| PG
+    DBT -->|staging a marts: tablas, agregacion| PG
     DOCS --> PG
     ADM --> PG
 ```
